@@ -25,7 +25,7 @@
 
 ## 安装说明
 
-**安装原版系统的原则是：无须`DSDT`和`SSDT`，配置和驱动文件要尽量精简，便于后期五国差错**
+**安装原版系统的原则是：无须`DSDT`和`SSDT`，配置和驱动文件要尽量精简，便于后期五国查错**
 - `drivers64UEFI`文件包含：
 
 	> DataHubDxe-64.efi
@@ -44,29 +44,29 @@
 
 ## config配置需注意的几点
 
-1. NVMe直接Patch
+### NVMe直接Patch
 
-	自从10.12以后不需要安装单独的NVMe驱动了，直接利用Clvoer的Patch功能即可，**特别注意安装不同版本对应的Patch不完全相同**
+自从10.12以后不需要安装单独的NVMe驱动了，直接利用Clvoer的Patch功能即可，**特别注意安装不同版本对应的Patch不完全相同**
 
-2. Iris 540在安装时ig-platform-id注入为0x12345678
+### Iris 540在安装时ig-platform-id注入为0x12345678
 
-	目前HD 520/530/540显卡要想驱动一般要注入`ig-platform-id：0x19160000`，有的机型`DVMT`预读显存和苹果规定的大小不一致，就容易在安装过程中卡AppleIntelSKLGraphicsFramebuffer，这里远景论坛里面也有各种各样的解决办法。对于非Surface Pro 4的机器，大家可以借鉴一些解决办法，以下是在远景论坛上搜集的一些解决方法：       
-		                      
-	> >  **法一：**有直接在BIOS里将DVMT改为96M以上 
-	> 这个办法可以但是前提是要Bios里有这个修改选项，Pro4里就没有这个选项
-	
-	> > **法二：**有的是通过直接升级Bios解决的 
-	> 其他机器可能可行，但是Pro 4目前看来是没法升级Bios的
-	
-	> > **法三：**有利用Clover的Patch直接对AppleIntelSKLGraphicsFramebuffer打二进制补丁解决的   
-	> 正常情况下，Clover里Patch过后就能解决问题，实际上Clover的Patch功能经常抽风，远景论坛上大把的人打了补丁还是卡这儿，Pro4同样不行
-	
-	> > **法四：**有的干脆直接上懒人版，然后替换SLE下的自己修改过的AppleIntelSKLGraphicsFramebuffer.kext  
-	> 这个办法一般情况下是能够解决问题的，但是考虑到要用到懒人版，而且还得装HFS+这个软件，容易造成HFS分区不稳定，不是很建议大家使用
+目前HD 520/530/540显卡要想驱动一般要注入`ig-platform-id：0x19160000`，有的机型`DVMT`预读显存和苹果规定的大小不一致，就容易在安装过程中卡AppleIntelSKLGraphicsFramebuffer，这里远景论坛里面也有各种各样的解决办法。对于非Surface Pro 4的机器，大家可以借鉴一些解决办法，以下是在远景论坛上搜集的一些解决方法：       
+	                    
+> - 法一：有直接在BIOS里将DVMT改为96M以上
+> 这个办法可以但是前提是要Bios里有这个修改选项，Pro4里就没有这个选项
+> 
+> - 法二：有的是通过直接升级Bios解决的 
+> 其他机器可能可行，但是Pro 4目前看来是没法升级Bios的
+> 
+> - 法三：有利用Clover的Patch直接对AppleIntelSKLGraphicsFramebuffer打二进制补丁解决的   
+> 正常情况下，Clover里Patch过后就能解决问题，实际上Clover的Patch功能经常抽风，远景论坛上大把的人打了补丁还是卡这儿，Pro4同样不行
+> 
+> - 法四：有的干脆直接上懒人版，然后替换SLE下的自己修改过的AppleIntelSKLGraphicsFramebuffer.kext  
+> 这个办法一般情况下是能够解决问题的，但是考虑到要用到懒人版，而且还得装HFS+这个软件，容易造成HFS分区不稳定，不是很建议大家使用
 
 **综上所述，个人认为目前解决卡`AppleIntelSKLGraphicsFramebuffer`最好的办法就是直接仿冒一个无用的显卡ID如：`fakeID=0X12345678`，也可以不是这个，只要仿冒一个无用的显卡ID即可）就行，目的是保证在初次安装系统时不加载显卡驱动。等安装完毕进入系统后再替换修改的`AppleIntelSKLGraphicsFramebuffer.kext`，然后修复权限即可。具体操作流程分两步进行**
 
-**Step 1：**
+#### **Step 1：**
 
 初次安装，仿冒无用显卡ID以进入系统，`config`注入`ig-platform-id：0x12345678`，代码如下： 
  
@@ -89,7 +89,8 @@
 	                <string>0x12345678</string>
 	        </dict> 
 
-**Step 2：**
+#### **Step 2：**
+
 利用原版镜像安装完成后注意：安装完成后替换`S/L/E`下的`AppleIntelSKLGraphicsFramebuffer.kext`，然后把`ig-platform-id`修改为注入为`0x19160000`，修复权限重启后即可驱动`Iris HD 540`，`config`注入代码如下：
 
 	<key>Graphics</key>
@@ -116,7 +117,7 @@
 ---- 
 ## 安装完成后对系统进行修正
 
-### - ALC298声卡的驱动及唤醒无声的解决
+### - ALC298声卡修正
 
 - ALC298声卡的驱动
 
