@@ -4,18 +4,18 @@
 
 ## 机器配置
 
-> 电脑型号        微软 Surface Pro 4 笔记本电脑  
-> 操作系统        Windows 10 专业版 64位 ( DirectX 12 )        
-> 处理器            英特尔 Core i7-6650U @ 2.20GHz 双核
-> 主板                微软 Surface Pro 4 ( 英特尔 PCI 标准主机 CPU 桥 - 100 Series 芯片组 )
-> 内存                16 GB
-> 主硬盘            三星 MZFLV2565M0Q ( 256 GB )
-> 显卡                英特尔 Iris graphics 540 
-> 显示器           12.3英寸 PixelTouch触控显示屏（分辨率2736 x 1824 267 PPI，3:2，10点触控）
-> 声卡               英特尔 显示器音频 @ 英特尔 High Definition Audio 控制器 （ALC298）
-> 网卡               Marvell Marvell AVASTAR Wireless-AC Network Controller / 045E0003
+电脑型号        微软 Surface Pro 4 笔记本电脑  
+操作系统        Windows 10 专业版 64位 ( DirectX 12 )        
+处理器            英特尔 Core i7-6650U @ 2.20GHz 双核
+主板                微软 Surface Pro 4 ( 英特尔 PCI 标准主机 CPU 桥 - 100 Series 芯片组 )
+内存                16 GB
+主硬盘            三星 MZFLV2565M0Q ( 256 GB )
+显卡                英特尔 Iris graphics 540 
+显示器           12.3英寸 PixelTouch触控显示屏（分辨率2736 x 1824 267 PPI，3:2，10点触控）
+声卡               英特尔 显示器音频 @ 英特尔 High Definition Audio 控制器 （ALC298）
+网卡               Marvell Marvell AVASTAR Wireless-AC Network Controller / 045E0003
 
-
+---- 
 ## 准备工作
 
 - 安全启动`Secure Boot`关掉
@@ -51,7 +51,7 @@
 2. Iris 540在安装时ig-platform-id注入为0x12345678
 
 	目前HD 520/530/540显卡要想驱动一般要注入`ig-platform-id：0x19160000`，有的机型`DVMT`预读显存和苹果规定的大小不一致，就容易在安装过程中卡AppleIntelSKLGraphicsFramebuffer，这里远景论坛里面也有各种各样的解决办法。对于非Surface Pro 4的机器，大家可以借鉴一些解决办法，以下是在远景论坛上搜集的一些解决方法：       
-		                     
+		                      
 	> >  **法一：**有直接在BIOS里将DVMT改为96M以上 
 	> 这个办法可以但是前提是要Bios里有这个修改选项，Pro4里就没有这个选项
 	
@@ -118,20 +118,20 @@
 
 ### - ALC298声卡的驱动及唤醒无声的解决
 
-	- ALC298声卡的驱动
-	
-	    通过从[vit9696][1]的主页上下载`AppleALC`的源码，保留`ALC298`的相关文件，删除其他无用的文件，并利用`Xcode`编译得到ALC298的仿冒声卡驱动`AppleALC.kext`，然后注入声卡ID为3即可。其中，注入声卡ID有两种方法，任选其一即可：
-	
-	    1. 方法一：利用Clover直接注入：
-	
-	            <key>Devices</key> 
-	                 <dict> 
-	                      <key>Audio</key> 
-	                      <dict> 
-	                           <key>Inject</key> 
-	                           <string>3</string> 
-	                      </dict> 
-	                 </dict> 
+- ALC298声卡的驱动
+
+	通过从[vit9696]()[1]()的主页上下载`AppleALC`的源码，保留`ALC298`的相关文件，删除其他无用的文件，并利用`Xcode`编译得到ALC298的仿冒声卡驱动`AppleALC.kext`，然后注入声卡ID为3即可。其中，注入声卡ID有两种方法，任选其一即可：
+
+1. 方法一：利用Clover直接注入：
+
+		<key>Devices</key> 
+		     <dict> 
+		          <key>Audio</key> 
+		          <dict> 
+		               <key>Inject</key> 
+		               <string>3</string> 
+		          </dict> 
+		     </dict> 
 
 2. 方法二：利用Rehabman的`HotPatches`直接通过`SSDT`注入：
 
@@ -151,7 +151,7 @@
 
 - 电池电量修复分两步进行：
 	- Step 1 ：
-	下载MaciASL，并添加Rehabman的补丁源网址：[http://raw.github.com/RehabMan/Laptop-DSDT-Patch/master][1]
+	下载MaciASL，并添加Rehabman的补丁源网址：[http://raw.github.com/RehabMan/Laptop-DSDT-Patch/master][3]
 	- Step 2 ：
 	找到`bat  Surface Pro v4`,打上对应的补丁，并配合`ACPIBatteryManager.kext`实现电池电量显示
 
@@ -198,11 +198,11 @@
 
 ## 特别鸣谢
 
-- [RehabMan][2]
-- [ Piker-Alpha ][3]
-- [ vit9696 ][4]
+- [RehabMan][4]
+- [ Piker-Alpha ][5]
+- [ vit9696 ][6]
 
-[1]:	http://raw.github.com/RehabMan/Laptop-DSDT-Patch/master
-[2]:	https://github.com/RehabMan
-[3]:	https://github.com/Piker-Alpha
-[4]:	https://github.com/vit9696
+[3]:	http://raw.github.com/RehabMan/Laptop-DSDT-Patch/master
+[4]:	https://github.com/RehabMan
+[5]:	https://github.com/Piker-Alpha
+[6]:	https://github.com/vit9696
