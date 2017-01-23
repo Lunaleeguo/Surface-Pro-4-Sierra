@@ -2,20 +2,30 @@
 微软 Surface Pro 4-macOS Sierra 10.12 黑苹果安装教程
 
 
+
 ## 机器配置
+
 
 电脑型号        微软 Surface Pro 4 笔记本电脑  
 操作系统        Windows 10 专业版 64位 ( DirectX 12 )        
 处理器            英特尔 Core i7-6650U @ 2.20GHz 双核
+
 主板                微软 Surface Pro 4 ( 英特尔 PCI 标准主机 CPU 桥 - 100 Series 芯片组 )
+
 内存                16 GB
+
 主硬盘            三星 MZFLV2565M0Q ( 256 GB )
+
 显卡                英特尔 Iris graphics 540 
+
 显示器           12.3英寸 PixelTouch触控显示屏（分辨率2736 x 1824 267 PPI，3:2，10点触控）
+
 声卡               英特尔 显示器音频 @ 英特尔 High Definition Audio 控制器 （ALC298）
+
 网卡               Marvell Marvell AVASTAR Wireless-AC Network Controller / 045E0003
 
----- 
+
+
 ## 准备工作
 
 - 安全启动`Secure Boot`关掉
@@ -23,9 +33,12 @@
 - 从U盘启动的方法：长按音量减键保持，然后轻按一下开机键，直到出现Clvoer界面时就可松开音量键了
 - **安装Clvoer时不要安装CsmVideoDxe-64.efi，drivers64UEFI里检查下有的要删除，不删除会黑屏**
 
+
+
 ## 安装说明
 
 **安装原版系统的原则是：无须`DSDT`和`SSDT`，配置和驱动文件要尽量精简，便于后期五国查错**
+
 - `drivers64UEFI`文件包含：
 
 	> DataHubDxe-64.efi
@@ -35,6 +48,7 @@
 	> PartitionDxe-64.efi
 	> VBoxHfs-64.efi
 
+
 - kexts中的`Others`文件包含：
 
 	> FakeSMC.kext
@@ -42,16 +56,19 @@
 	> USBInjectAll.kext
 
 
+
 ## config配置需注意的几点
+
 
 ### NVMe直接Patch
 
 自从10.12以后不需要安装单独的NVMe驱动了，直接利用Clvoer的Patch功能即可，**特别注意安装不同版本对应的Patch不完全相同**
 
+
 ### Iris 540在安装时ig-platform-id注入为0x12345678
 
 目前HD 520/530/540显卡要想驱动一般要注入`ig-platform-id：0x19160000`，有的机型`DVMT`预读显存和苹果规定的大小不一致，就容易在安装过程中卡AppleIntelSKLGraphicsFramebuffer，这里远景论坛里面也有各种各样的解决办法。对于非Surface Pro 4的机器，大家可以借鉴一些解决办法，以下是在远景论坛上搜集的一些解决方法：       
-	                    
+                     
 > - 法一：有直接在BIOS里将DVMT改为96M以上
 > 这个办法可以但是前提是要Bios里有这个修改选项，Pro4里就没有这个选项
 > 
@@ -63,6 +80,8 @@
 > 
 > - 法四：有的干脆直接上懒人版，然后替换SLE下的自己修改过的AppleIntelSKLGraphicsFramebuffer.kext  
 > 这个办法一般情况下是能够解决问题的，但是考虑到要用到懒人版，而且还得装HFS+这个软件，容易造成HFS分区不稳定，不是很建议大家使用
+
+
 
 **综上所述，个人认为目前解决卡`AppleIntelSKLGraphicsFramebuffer`最好的办法就是直接仿冒一个无用的显卡ID如：`fakeID=0X12345678`，也可以不是这个，只要仿冒一个无用的显卡ID即可）就行，目的是保证在初次安装系统时不加载显卡驱动。等安装完毕进入系统后再替换修改的`AppleIntelSKLGraphicsFramebuffer.kext`，然后修复权限即可。具体操作流程分两步进行**
 
@@ -114,8 +133,10 @@
 
 至此，Surface Pro 4通过仿冒无用显卡ID先安装原版镜像，进入系统后，替换修改版`AppleIntelSKLGraphicsFramebuffer.kext`并修复权限，再注入正确的显卡ID即可驱动显卡，并避免了在安装过程中卡`AppleIntelSKLGraphicsFramebuffer`的问题。
 
+
 ---- 
 ## 安装完成后对系统进行修正
+
 
 ### - ALC298声卡修正
 
@@ -142,10 +163,12 @@
 
 		直接利用Rehabman的`CodecCommander.kext`驱动便可解决
 
+
 ---- 
 ### - 亮度修复
 
 利用Rehabman的`HotPatches`加入`SSDT-PNLF.aml`放入`ACPI/patched`并配合`IntelBacklight.kext`，实现亮度可调
+
 
 ---- 
 ### - 电池电量修复
@@ -156,6 +179,7 @@
 	- Step 2 ：
 	找到`bat  Surface Pro v4`,打上对应的补丁，并配合`ACPIBatteryManager.kext`实现电池电量显示
 
+
 ---- 
 ### - 网卡修正
 
@@ -164,10 +188,12 @@
 - 等系统重启完了，点击右上角的WiFi图标，选择最后一项，按顺序重新添加**以太网**，**Wi-Fi**，应用。蓝牙可以不添加，之后自动会加的。
 - 利用Rehabman的`HotPatches`加入`ssdt-rmne.aml `放入`ACPI/patched`并配合`NullEthernet.kext`，实现App Store无障碍登录。
 
+
 ---- 
 ### - TF卡读卡器的修正
 
 配合`GenericUSBXHCI.kext`，可以完美使用TF读卡器，并且USB 3.0以及拓展坞的正常使用
+
 
 ---- 
 ### - 电源管理及变频的修正
@@ -190,11 +216,13 @@
 - Type Cover键盘可用
 
 
+
 ## 目前无解
 
 - Marvell的无线蓝牙二合一卡均无解
 - 触控无解，Surface Pen无法使用
 - 前后摄像头+红外线无解   
+
 
 
 ## 特别鸣谢
