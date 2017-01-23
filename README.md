@@ -6,23 +6,8 @@
 ## 机器配置
 
 
-电脑型号        微软 Surface Pro 4 笔记本电脑  
-操作系统        Windows 10 专业版 64位 ( DirectX 12 )        
-处理器            英特尔 Core i7-6650U @ 2.20GHz 双核
-
 主板                微软 Surface Pro 4 ( 英特尔 PCI 标准主机 CPU 桥 - 100 Series 芯片组 )
 
-内存                16 GB
-
-主硬盘            三星 MZFLV2565M0Q ( 256 GB )
-
-显卡                英特尔 Iris graphics 540 
-
-显示器           12.3英寸 PixelTouch触控显示屏（分辨率2736 x 1824 267 PPI，3:2，10点触控）
-
-声卡               英特尔 显示器音频 @ 英特尔 High Definition Audio 控制器 （ALC298）
-
-网卡               Marvell Marvell AVASTAR Wireless-AC Network Controller / 045E0003
 
 
 
